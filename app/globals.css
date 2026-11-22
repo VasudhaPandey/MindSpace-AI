@@ -1,0 +1,398 @@
+
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-display);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* ==========================================
+   MINDSPACE AI — DEEP FOREST GREEN THEME
+   Emerald × Forest × Jade × Mint × Teal
+========================================== */
+
+:root,
+.dark {
+  --background: #091610;
+  --foreground: #EAF5ED;
+
+  --card: #14271D;
+  --card-foreground: #EAF5ED;
+
+  --popover: #193126;
+  --popover-foreground: #EAF5ED;
+
+  --primary: #0B9B6A;
+  --primary-foreground: #FFFFFF;
+
+  --secondary: #204A35;
+  --secondary-foreground: #DDF5E5;
+
+  --muted: #182D22;
+  --muted-foreground: #A0B8A8;
+
+  --accent: #176B5B;
+  --accent-foreground: #DFFFF5;
+
+  --destructive: #EF5350;
+
+  --border: #294535;
+  --input: #315440;
+  --ring: #65D6A6;
+
+  --chart-1: #0B9B6A;
+  --chart-2: #20A879;
+  --chart-3: #27BBD0;
+  --chart-4: #65D6A6;
+  --chart-5: #315BD5;
+
+  --radius: 0.75rem;
+
+  --sidebar: #0D1F16;
+  --sidebar-foreground: #EAF5ED;
+  --sidebar-primary: #20A879;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #1B3828;
+  --sidebar-accent-foreground: #DFFFF0;
+  --sidebar-border: #253D2E;
+  --sidebar-ring: #65D6A6;
+}
+
+/* ==========================================
+   BASE STYLES
+========================================== */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+    min-height: 100%;
+    background-color: #091610;
+  }
+
+  body {
+    @apply text-foreground relative;
+    min-height: 100vh;
+    background-color: #091610;
+
+    /* Global emerald atmosphere */
+    background-image:
+      /* Top-left emerald illumination */
+      radial-gradient(
+        ellipse 65% 60% at 0% 0%,
+        rgba(42, 190, 115, 0.38) 0%,
+        rgba(25, 145, 85, 0.20) 35%,
+        transparent 75%
+      ),
+
+      /* Top-right jade and teal illumination */
+      radial-gradient(
+        ellipse 55% 55% at 100% 0%,
+        rgba(25, 155, 119, 0.28) 0%,
+        rgba(20, 110, 85, 0.12) 45%,
+        transparent 75%
+      ),
+
+      /* Bottom-left soft emerald glow */
+      radial-gradient(
+        ellipse 60% 55% at 0% 100%,
+        rgba(22, 155, 91, 0.24) 0%,
+        rgba(15, 100, 65, 0.10) 48%,
+        transparent 78%
+      ),
+
+      /* Bottom-right mint and teal illumination */
+      radial-gradient(
+        ellipse 65% 65% at 100% 100%,
+        rgba(35, 190, 133, 0.30) 0%,
+        rgba(15, 115, 88, 0.13) 45%,
+        transparent 78%
+      ),
+
+      /* Very subtle upper-middle light */
+      radial-gradient(
+        ellipse 70% 45% at 50% 0%,
+        rgba(24, 110, 75, 0.14),
+        transparent 75%
+      ),
+
+      /* Deep forest-green centre */
+      radial-gradient(
+        ellipse 75% 75% at 50% 48%,
+        #07130D 0%,
+        #091810 48%,
+        #0B2016 100%
+      );
+
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-heading);
+  }
+
+  .bn-container :is(h1, h2, h3) {
+    font-family: inherit;
+  }
+}
+
+/* ==========================================
+   REUSABLE GLOBAL PAGE BACKGROUND
+========================================== */
+
+@utility mindspace-background {
+  position: relative;
+  isolation: isolate;
+  background-color: #091610;
+  background-image:
+    radial-gradient(
+      ellipse 65% 60% at 0% 0%,
+      rgba(42, 190, 115, 0.38),
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse 55% 55% at 100% 0%,
+      rgba(25, 155, 119, 0.28),
+      transparent 75%
+    ),
+    radial-gradient(
+      ellipse 60% 55% at 0% 100%,
+      rgba(22, 155, 91, 0.24),
+      transparent 78%
+    ),
+    radial-gradient(
+      ellipse 65% 65% at 100% 100%,
+      rgba(35, 190, 133, 0.30),
+      transparent 78%
+    ),
+    radial-gradient(
+      ellipse 75% 75% at 50% 48%,
+      #07130D 0%,
+      #091810 48%,
+      #0B2016 100%
+    );
+}
+
+/* ==========================================
+   REUSABLE SURFACE EFFECTS
+========================================== */
+
+@utility emerald-glow {
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    pointer-events: none;
+    border-radius: inherit;
+    background: radial-gradient(
+      ellipse at 50% 0%,
+      rgba(32, 168, 121, 0.22),
+      rgba(11, 155, 106, 0.06) 45%,
+      transparent 75%
+    );
+    filter: blur(18px);
+  }
+}
+
+@utility forest-card {
+  background: linear-gradient(
+    145deg,
+    #1B3828 0%,
+    #14271D 55%,
+    #102219 100%
+  );
+  border: 1px solid rgba(101, 214, 166, 0.12);
+  box-shadow:
+    0 8px 30px rgba(0, 0, 0, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+@utility emerald-button-glow {
+  background: linear-gradient(
+    115deg,
+    #087F5B,
+    #0B9B6A 55%,
+    #20A879
+  );
+  box-shadow:
+    0 4px 16px rgba(11, 155, 106, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  transition:
+    box-shadow 250ms ease,
+    filter 250ms ease,
+    transform 250ms ease;
+
+  &:hover {
+    box-shadow:
+      0 6px 24px rgba(32, 168, 121, 0.35),
+      0 0 32px rgba(32, 168, 121, 0.14);
+    filter: brightness(1.12);
+  }
+}
+
+@utility green-hover {
+  transition:
+    background-color 220ms ease,
+    border-color 220ms ease,
+    box-shadow 220ms ease;
+
+  &:hover {
+    border-color: rgba(101, 214, 166, 0.32);
+    box-shadow: 0 0 22px rgba(32, 168, 121, 0.10);
+  }
+}
+
+/* ==========================================
+   TOPOGRAPHIC BACKGROUND
+========================================== */
+
+@utility topo-bg {
+  position: relative;
+  isolation: isolate;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+
+    background:
+      radial-gradient(
+        ellipse 38% 45% at 30% 35%,
+        rgba(32, 168, 121, 0.85),
+        transparent 75%
+      ),
+      radial-gradient(
+        ellipse 42% 45% at 70% 55%,
+        rgba(39, 187, 208, 0.42),
+        transparent 75%
+      ),
+      radial-gradient(
+        ellipse 55% 60% at 50% 50%,
+        rgba(11, 127, 91, 0.45),
+        transparent 85%
+      );
+
+    mask-image:
+      url("/textures/topo.svg"),
+      radial-gradient(
+        ellipse 75% 70% at 50% 45%,
+        black 30%,
+        transparent 85%
+      );
+    mask-size: cover, 100% 100%;
+    mask-position: center;
+    mask-repeat: no-repeat;
+    mask-composite: intersect;
+    opacity: 0.65;
+  }
+}
+
+/* ==========================================
+   REGISTRATION MARKS
+========================================== */
+
+@utility survey-frame {
+  position: relative;
+
+  &::after {
+    --mark: rgba(101, 214, 166, 0.8);
+    --size: 14px;
+
+    content: "";
+    position: absolute;
+    inset: -8px;
+    pointer-events: none;
+
+    background:
+      linear-gradient(var(--mark), var(--mark)) top left / var(--size) 1px,
+      linear-gradient(var(--mark), var(--mark)) top left / 1px var(--size),
+      linear-gradient(var(--mark), var(--mark)) top right / var(--size) 1px,
+      linear-gradient(var(--mark), var(--mark)) top right / 1px var(--size),
+      linear-gradient(var(--mark), var(--mark)) bottom left / var(--size) 1px,
+      linear-gradient(var(--mark), var(--mark)) bottom left / 1px var(--size),
+      linear-gradient(var(--mark), var(--mark)) bottom right / var(--size) 1px,
+      linear-gradient(var(--mark), var(--mark)) bottom right / 1px var(--size);
+
+    background-repeat: no-repeat;
+  }
+}
+
+/* ==========================================
+   ORIGINAL SCROLL ANIMATION
+========================================== */
+
+@keyframes scroll-tilt {
+  from {
+    transform: perspective(1400px) translateY(-70px) rotateX(22deg) scale(0.96);
+  }
+
+  to {
+    transform: perspective(1400px) translateY(0) rotateX(0deg) scale(1);
+  }
+}
+
+@utility scroll-tilt {
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      animation: scroll-tilt linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 500px;
+    }
+  }
+}
