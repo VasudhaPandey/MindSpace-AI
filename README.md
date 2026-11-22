@@ -2,58 +2,56 @@
 
 ### Where ideas find their space to grow.
 
-**MindSpace AI** is an AI-powered collaborative workspace where ideas turn into structured work. Interact with an AI agent that can create and edit content across an interactive canvas and document editor, while collaborating with your team in real time.
+**MindSpace AI** is an AI-powered collaborative workspace that helps turn ideas into structured work. It brings together an AI workspace agent, an interactive visual canvas, a rich-text document editor, and real-time collaboration in one connected environment.
 
-## Overview
+Instead of switching between separate tools, users can describe what they want to create and let the AI agent help organize and develop their ideas across the canvas and document.
 
-MindSpace AI brings AI assistance, visual planning, documentation, and real-time collaboration together in one workspace.
+## ✨ Features
 
-Instead of switching between multiple tools, users can describe what they want to create and let the AI agent help organize their ideas across the canvas and document.
+- **AI Workspace Agent** — Use natural language to create, update, and organize content across your workspace.
+- **Interactive Canvas** — Build diagrams, flowcharts, and visual representations on an interactive infinite canvas.
+- **Entity Relationship Diagrams** — Create database entity tables, manage columns, mark primary and foreign keys, and connect relationships.
+- **Rich-text Documents** — Create and edit structured documents using a block-based editor.
+- **Real-time Collaboration** — Work together with synchronized document updates, canvas changes, and live cursors.
+- **AI-assisted Workspace Creation** — Describe your idea using text or voice to get started with a workspace.
+- **Workspace Dashboard** — Organize workspaces using a dashboard and drag-and-drop Kanban board.
+- **Team Collaboration** — Collaborate through Clerk Organizations and workspace access controls.
+- **Workspace Sharing** — Share read-only workspace views through shareable links.
+- **PDF Export** — Export documents and canvases as PDF files.
+- **Usage and Subscription Management** — Track AI prompt usage and manage plan-based feature limits.
 
-## Features
-
-- **AI-powered workspace:** Interact with an AI agent that works across the canvas and document editor.
-- **Interactive canvas:** Create and edit diagrams, including ERD tables with editable columns, primary and foreign key badges, and connecting arrows.
-- **Collaborative documents:** Write and edit documents using a block-based editor with real-time collaboration.
-- **Live collaboration:** Work alongside other users with synchronized canvas updates, document edits, and live cursors.
-- **AI-assisted workspace creation:** Describe what you want to work on using text or voice and create a new workspace.
-- **Workspace dashboard:** Organize and access your workspaces through a dashboard and Kanban board with drag-and-drop functionality.
-- **Team workspaces:** Collaborate through Clerk Organizations.
-- **Sharing and export:** Share read-only workspace links and export documents and canvases as PDFs.
-- **Subscription management:** Support for plans, usage tracking, and feature limits through Clerk Billing.
-
-## Tech Stack
+## 🛠️ Tech Stack
 
 | Area | Technology |
 |---|---|
-| Framework | Next.js (App Router, Server Actions) |
-| Frontend | React, TypeScript |
-| Authentication and Organizations | Clerk |
-| Database and Realtime | Supabase (PostgreSQL and Realtime) |
+| Framework | Next.js 16 (App Router) |
+| Frontend | React 19, TypeScript |
+| Authentication | Clerk |
+| Database | PostgreSQL (Supabase) |
 | ORM | Prisma |
-| AI Integration | Vercel AI SDK and Google Gemini |
+| AI Integration | Google Gemini, Vercel AI SDK |
 | Interactive Canvas | tldraw |
 | Document Editor | BlockNote |
-| Real-time Document Sync | Yjs |
-| Styling | Tailwind CSS |
-| UI Components | shadcn/ui |
+| Real-time Collaboration | Yjs, Supabase Realtime |
+| UI and Styling | Tailwind CSS, shadcn/ui |
+| Canvas Synchronization | Cloudflare Workers, tldraw Sync |
 
-## Getting Started
+## 🚀 Getting Started
+
+Follow these steps to run MindSpace AI locally.
 
 ### Prerequisites
 
 - Node.js 22 or later
 - npm
-- A Clerk account
-- A Supabase account
-- A Google AI Studio account
+- A [Clerk](https://clerk.com/) account
+- A [Supabase](https://supabase.com/) project
+- A [Google AI Studio](https://aistudio.google.com/) API key
 
 ### 1. Clone the repository
 
-Replace `YOUR-GITHUB-USERNAME` with your GitHub username.
-
 ```bash
-git clone https://github.com/YOUR-GITHUB-USERNAME/MindSpace-AI.git
+git clone https://github.com/VasudhaPandey/MindSpace-AI.git
 cd MindSpace-AI
 ```
 
@@ -63,40 +61,54 @@ cd MindSpace-AI
 npm install
 ```
 
-This also generates the Prisma client.
+The post-install script generates the Prisma Client.
 
 ### 3. Configure environment variables
 
-Create your local environment file from the example:
+Create a `.env` file in the root directory of the project.
 
-**Windows PowerShell:**
-```powershell
-Copy-Item .env.example .env
+Add the following variables and replace the placeholder values with your own credentials:
+
+```env
+# Clerk Authentication
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
+CLERK_SECRET_KEY=
+
+# Supabase PostgreSQL Database
+DATABASE_URL=
+DIRECT_URL=
+
+# Supabase Realtime
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+
+# Google Gemini API
+GOOGLE_GENERATIVE_AI_API_KEY=
+
+# tldraw
+NEXT_PUBLIC_TLDRAW_SYNC_URL=
+NEXT_PUBLIC_TLDRAW_LICENSE_KEY=
 ```
 
-**macOS / Linux:**
-```bash
-cp .env.example .env
-```
-
-Add your credentials to `.env`.
+**Where to find the credentials:**
 
 | Variable | Source |
 |---|---|
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk Dashboard → API Keys |
 | `CLERK_SECRET_KEY` | Clerk Dashboard → API Keys |
-| `DATABASE_URL` | Supabase → Connect → Pooled connection (port 6543) |
-| `DIRECT_URL` | Supabase → Connect → Direct connection (port 5432) |
+| `DATABASE_URL` | Supabase → Connect → Pooled connection |
+| `DIRECT_URL` | Supabase → Connect → Direct connection |
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Project Settings → API |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase → Project Settings → API |
 | `GOOGLE_GENERATIVE_AI_API_KEY` | Google AI Studio → API Keys |
-| `NEXT_PUBLIC_TLDRAW_LICENSE_KEY` | Optional during development; see deployment instructions |
+| `NEXT_PUBLIC_TLDRAW_SYNC_URL` | URL of your deployed tldraw synchronization worker |
+| `NEXT_PUBLIC_TLDRAW_LICENSE_KEY` | tldraw production license; optional during local development |
 
-Never commit your `.env` file or expose your API keys.
+Keep your `.env` file private. Never commit API keys, database credentials, or other secrets to GitHub.
 
 ### 4. Set up the database
 
-Create and apply the database tables using Prisma migrations:
+After configuring your Supabase database connection, apply the Prisma migrations:
 
 ```bash
 npx prisma migrate deploy
@@ -104,32 +116,32 @@ npx prisma migrate deploy
 
 ### 5. Configure Clerk
 
-In your [Clerk Dashboard](https://dashboard.clerk.com):
+In your [Clerk Dashboard](https://dashboard.clerk.com/):
 
 1. Enable Organizations.
-2. Set organization membership to optional so users can work with personal accounts.
-3. Configure Clerk Billing if you intend to use subscriptions.
+2. Allow organization membership to be optional if users should also be able to work with personal accounts.
+3. Configure Clerk Billing if you want to enable subscriptions.
 4. Configure the subscription plans and feature keys used by the application.
 
-The application uses the following feature keys:
+The application uses these feature keys:
 
-| Feature key | Purpose |
+| Feature Key | Purpose |
 |---|---|
-| `unlimited_workspaces` | Removes the three-workspace limit |
+| `unlimited_workspaces` | Removes the default workspace limit |
 | `public_sharing` | Enables public read-only sharing |
 | `pdf_export` | Enables PDF export |
-| `agent_prompts_500` | 500 agent prompts per seat per month |
-| `agent_prompts_2000` | 2,000 agent prompts per seat per month |
+| `agent_prompts_500` | Allows 500 AI prompts per seat per month |
+| `agent_prompts_2000` | Allows 2,000 AI prompts per seat per month |
 
-The original plan configuration uses Free, Pro, Team, and Enterprise plans. Review the application's billing configuration before enabling real payments.
+Review the billing configuration before enabling real payments.
 
 ### 6. Configure Supabase Realtime
 
-Document collaboration uses public Supabase Realtime broadcast channels.
+Document collaboration uses Supabase Realtime broadcast channels.
 
-Make sure public, non-private Realtime channels are allowed in your Supabase project settings.
+Make sure your Supabase project allows the public, non-private Realtime channels required by the application.
 
-### 7. Run the application
+### 7. Run the development server
 
 ```bash
 npm run dev
@@ -137,48 +149,13 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-To test collaboration, sign in using two different accounts in separate browser windows.
+To test collaboration, sign in with two different accounts in separate browser windows.
 
-## Project Structure
+## 🖥️ Canvas Synchronization Server
 
-```text
-app/
-  page.tsx
-  (main)/dashboard/
-  (main)/workspaces/
-  (main)/workspace/[id]/
-  shared/[token]/
-  api/agent/
+MindSpace AI includes a separate tldraw synchronization service in the `tldraw-sync` directory.
 
-actions/
-components/
-hooks/
-lib/
-prisma/
-tldraw-sync/
-```
-
-- `app/` — Application routes and pages.
-- `actions/` — Server Actions for workspace, document, canvas, and usage operations.
-- `components/` — Shared UI components.
-- `hooks/` — Custom hooks for AI chat and collaboration.
-- `lib/` — AI agent tools, canvas and document operations, billing, and plan limits.
-- `prisma/` — Database schema and migrations.
-- `tldraw-sync/` — Canvas synchronization server.
-
-## How the AI Agent Works
-
-The AI agent uses Google Gemini through the Vercel AI SDK.
-
-It can work across the canvas and document editor using tools selected by the model. These tools execute in the browser against the active editors, allowing collaborators to see changes in real time.
-
-Each request includes a compact summary of both surfaces so the agent can work with existing content.
-
-## Deployment
-
-### Canvas synchronization server
-
-Deploy the canvas synchronization server and configure `NEXT_PUBLIC_TLDRAW_SYNC_URL` with the deployed URL.
+For collaborative canvas functionality in a deployed environment, deploy this service using Cloudflare Workers.
 
 ```bash
 cd tldraw-sync
@@ -187,15 +164,29 @@ npx wrangler login
 npm run deploy
 ```
 
-### Next.js application
+Configure `NEXT_PUBLIC_TLDRAW_SYNC_URL` in the main application's environment with the deployed worker URL.
 
-1. Deploy the application using [Vercel](https://vercel.com).
-2. Add the required environment variables to your deployment settings.
-3. Configure the deployed canvas synchronization URL.
-4. Obtain a tldraw production license from [tldraw.dev](https://tldraw.dev/pricing) and configure `NEXT_PUBLIC_TLDRAW_LICENSE_KEY`.
-5. Connect your own Stripe account through Clerk Billing before accepting real payments.
+## 📁 Project Structure
 
-## Available Scripts
+```text
+MindSpace-AI/
+├── actions/              # Server actions
+├── app/                  # Next.js application routes
+│   ├── (auth)/            # Authentication pages
+│   ├── (main)/            # Dashboard and workspace pages
+│   ├── api/               # API routes
+│   └── shared/            # Shared workspace views
+├── components/            # Reusable UI components
+├── hooks/                 # Custom React hooks
+├── lib/                   # AI tools and application logic
+├── prisma/                # Database schema and migrations
+├── public/                # Static assets
+├── tldraw-sync/            # Canvas synchronization service
+├── package.json
+└── README.md
+```
+
+## 📜 Available Scripts
 
 | Command | Description |
 |---|---|
@@ -203,13 +194,30 @@ npm run deploy
 | `npm run build` | Create a production build |
 | `npm run start` | Start the production server |
 | `npm run lint` | Run ESLint |
-| `npm run seed -- you@email.com [org_id]` | Add demo workspaces |
+| `npm run seed -- user@email.com` | Seed demo workspaces |
 
-After modifying `prisma/schema.prisma`, create and apply a migration, run `npx prisma generate`, and restart the development server.
+After modifying `prisma/schema.prisma`, create and apply the appropriate database migration, regenerate the Prisma Client, and restart the development server.
 
-## Credits
+## ☁️ Deployment
 
-MindSpace AI builds upon the original open-source workspace project and its implementation concepts.
+The application and canvas synchronization service are deployed separately.
+
+**Next.js application**
+1. Deploy the application using [Vercel](https://vercel.com/).
+2. Configure the required environment variables.
+3. Connect your Supabase database and Clerk application.
+4. Configure the deployed canvas synchronization URL.
+5. Set up the required tldraw production license.
+
+**Canvas synchronization**
+1. Deploy the `tldraw-sync` service using Cloudflare Workers.
+2. Configure the worker URL in the main application's environment variables.
+
+Configure your own Clerk Billing and payment provider before accepting real payments.
+
+## 🙌 Credits
+
+MindSpace AI builds upon an existing open-source workspace project and its implementation concepts.
 
 Original tutorial by **Roadside Coder**:
 
@@ -217,10 +225,8 @@ Original tutorial by **Roadside Coder**:
 
 The original project and its dependencies retain their applicable licenses and attribution.
 
-## License
+## 📄 License
 
 This project is licensed under the **GNU General Public License v3.0 (GPL-3.0)**.
 
 See the [LICENSE](LICENSE) file for details.
-
-The original project includes the BlockNote PDF exporter, which is GPL-3.0 licensed. Review the applicable licensing terms before distributing modified versions or using the project in a closed-source product.
