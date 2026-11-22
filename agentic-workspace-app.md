@@ -1,304 +1,800 @@
-# Outpost — YouTube Project Plan (Agentic Workspace App)
+# MindSpace AI — Academic Project Documentation
 
-## Context / Origin
+## 1. Project Overview
 
-- Channel: roadsidecoder — makes Next.js project tutorials similar in style to Code With Antonio / JS Mastery.
-- Previous video: AI agentic app builder (agent performs actions in a live UI).
-- This project is a sequel/follow-up in the same "agent performs visible actions" vein, but built around a canvas instead of an app builder.
-- Researched the space: existing tldraw-skill / mcp-excalidraw / agent-canvas tools are dev-facing (coding agents drawing diagrams for developers), not consumer-facing apps where an end user chats with AI to build a whiteboard live. That's the gap this project fills — no polished YouTube tutorial covers this yet.
-- Compared to Eraser.io / Miro: those have "prompt to diagram" AI features already (e.g. Eraser's DiagramGPT), but they snap-render the final result. This project's differentiator is the AI actually appears to draw live, shape-by-shape, with a visible agent cursor — closer to a "second collaborator" than a black-box generate button.
-- Pitch framing for the video: "I built my own AI-powered Miro/Eraser — here's how the agent actually draws on the canvas." Honest framing since the internals (agent loop, tool calls, streaming) are the real teaching content, not a UI clone.
+**Project Name:** MindSpace AI  
+**Project Category:** Agentic Workspace Application  
+**Tagline:** Where ideas find their space to grow.
 
-## Naming / Scope Decision
+MindSpace AI is an AI-powered collaborative workspace that helps users organize ideas, create visual diagrams, and develop structured documentation through natural-language interaction.
 
-- Considered category names: Agentic Whiteboard, AI Diagram Generator, AI Canvas App, AI Work OS, Agent OS, Agentic Productivity App. Landed on **Agentic Workspace App** as the product category — broader than "whiteboard," pulls in Notion/ClickUp/productivity-tool search audience, not just design-tool audience.
-- Important constraint: "Workspace" is only an accurate category if the agent acts across **at least two distinct surfaces** (not just one canvas with a chat sidebar). Decision made: build **two surfaces, canvas + docs**, and earn the name through the agent acting across both (e.g. writing a diagram up as a spec doc). A separate tasks surface was cut (see "Workspace board" below). If scope ever gets cut back to canvas-only, describe it as an "Agentic Canvas App" instead.
-- **Product name: Outpost.** Considered against past project-naming pattern (Vehiql, Sensai, Welth, Zcrum, Trimrr, Splitr, Servd, Kribb, Forge — mostly short/compressed/vowel-dropped names). Outpost breaks that compression pattern deliberately, same way **Forge** (the agentic app builder, closest sibling project) did — reserved for more ambitious/flagship-feeling builds. Metaphor: a forward base for doing work in unfamiliar territory — fits "workspace" well, reasonable fit for "canvas" (base camp for mapping something out), weaker fit for "agent" specifically. Runner-up considered: **Relay** (stronger agent/collaborator connotation, weaker workspace connotation) — could revisit if the live agent cursor ends up being marketed harder than the workspace framing.
+The application combines two primary working environments:
 
-## Branding
+- **Canvas:** An interactive, infinite whiteboard where users can create diagrams, flowcharts, entity-relationship diagrams, and other visual structures.
+- **Documents:** A block-based document editor where users can write, organize, and refine structured content.
 
-- **Mascot/logo**: a black robot-head icon with a winking circular "eye" (doubles as a subtle power/loading-ring motif) and a visor slit — friendly but techy, fits an "agent as collaborator" personality.
-- **Wordmark**: bold condensed "OUTPOST" lockup with the bot mascot perched on/integrated into the "P," tilted slightly for energy. Strong and distinctive at large sizes (hero/thumbnail).
-- **Asset generation**: source files (`outpost-bot.png`, `outpost-logo.png`, both flattened on white) were processed with a Pillow script (`scripts/generate-assets.py`) — keys out the white background to transparency, autocrops, generates square icon variants, inverted (white-on-transparent) dark-mode variants, and a dark-background OG/social image from the wordmark. That script was never committed to this repo, so regenerating assets means recreating it; the source art is kept in `assets/source/`.
-- **Known issue**: at true 16×16 favicon size, the mascot's antenna + lightning-bolt details compete with the eye/visor and the icon reads as noise, not a shape. Works fine from 32px up. Not yet fixed — would need a separate, more simplified crop (eye + visor only) specifically for the 16px favicon frame.
-- **Visual identity (replaces the old film grain and glow blobs, which read as a generic AI-built site):**
-  - **Topographic contours** (`public/textures/topo.svg`) behind hero sections, applied with the `topo-bg` utility in `globals.css`. The SVG masks a color gradient, so lines glow amber at the center and cool to grey at the edges, then fade out softly. `MapAnnotations` adds printed-map corner labels (coordinates, elevation, a "You are here" marker, scale bar) on the landing hero and closing section (not the dashboard, which stays simpler), hidden on phones. Generated from a smooth random terrain with every 4th line thicker as an index contour, like a survey map. Ties to the name: an outpost is a base for mapping unknown territory. Never used over the doc or canvas editors.
-  - **Bricolage Grotesque** for headings (h1-h3, via `--font-heading`, with the optical-size axis); Geist stays for body text. Doc headings keep the editor's own font.
-  - The accent word in the landing headline is solid amber instead of gradient text.
-  - **Survey-map details on the landing page:** amber registration marks (`survey-frame` utility) around the product mockups and hero demo; numbered monospace section labels (`01 · Surfaces`, `02 · The route`, `03 · Pricing`; the testimonial section was removed) instead of generic badges and sparkle icons; the four "how it works" steps joined as waypoints on a dashed trail; a pulsing "You are here" marker; and the closing CTA back over the contours.
-- **Asset layout** (unused variants removed on 2026-09-27; git history has them):
-  - `public/favicon.ico`, `public/icon.png`, `public/apple-icon.png` — kept at root; required there by Next.js App Router auto-detection, cannot be nested.
-  - `public/brand/` — `logo-navbar-dark.png` (site header), `mascot.png`, `mascot-dark.png`
-  - `public/icons/` — `icon-192.png`, `icon-512.png` (referenced by `manifest.json` for PWA)
-  - `public/social/og-image.png` — link preview image, wired into `openGraph` and `twitter` metadata in `app/layout.tsx`
-  - `public/textures/topo.svg` — contour background
-  - `public/videos/` — landing hero video (`hero.webm`, `hero.mp4` fallback, `hero-poster.jpg`), encoded from the original
-  - `assets/source/` (not deployed) — original brand artwork (`outpost-bot.png`, `outpost-logo.png`) and the original hero video `outpost.mp4`, which is gitignored because of its size
-- **Still to do**: simplified 16px-safe favicon crop; possibly a horizontal vs. stacked lockup variant for different UI placements (navbar vs. landing hero) if the current navbar crop doesn't work well in practice.
+An integrated AI agent assists users across both environments. It can create and modify canvas elements, draft and update documents, and transfer information between the two surfaces.
 
-## Pages / Routes
+The goal is to provide a unified workspace in which users can move from an initial idea to a visual representation and supporting documentation without switching between separate applications.
 
-| Route | Purpose |
+## 2. Problem Statement
+
+Traditional productivity applications often separate visual planning, diagram creation, and document writing into different tools.
+
+This separation can create several difficulties:
+
+- Users must switch between applications to manage related information.
+- Visual diagrams and written documentation can become disconnected.
+- Manually creating and updating diagrams can be time-consuming.
+- Users may need technical knowledge to create structured visual representations.
+- Collaborating on multiple types of workspace content can require separate tools.
+
+MindSpace AI addresses these problems by combining a collaborative canvas, document editor, and AI agent within one application.
+
+## 3. Project Objectives
+
+The primary objectives of MindSpace AI are:
+
+1. Develop an integrated workspace containing both a visual canvas and a document editor.
+2. Implement an AI agent that understands natural-language instructions.
+3. Enable the agent to create and modify diagrams through individual canvas operations.
+4. Allow the agent to generate, update, and summarize document content.
+5. Support information transfer between the canvas and document editor.
+6. Provide real-time collaboration and presence indicators.
+7. Implement authentication and organization-based workspace access.
+8. Provide workspace management, sharing, and document export.
+9. Implement usage limits and subscription-based access control.
+10. Develop a responsive and accessible user interface.
+
+## 4. System Scope and Major Modules
+
+### 4.1 Workspace Management
+
+The application provides a centralized dashboard for managing workspaces.
+
+Features include:
+
+- Creating new workspaces.
+- Renaming and deleting workspaces.
+- Organizing workspaces by status.
+- Viewing recently active workspaces.
+- Managing personal and organization-based workspaces.
+- Opening the canvas and document editor within a workspace.
+
+Each workspace contains one document and one canvas.
+
+### 4.2 Canvas Module
+
+The canvas is an infinite visual workspace built using the tldraw SDK.
+
+Features include:
+
+- Creating rectangles, ellipses, text, and arrows.
+- Drawing and editing visual elements.
+- Connecting shapes.
+- Creating flowcharts and architecture diagrams.
+- Creating entity-relationship diagrams.
+- Updating and deleting existing shapes.
+- Saving canvas content.
+- Supporting multiple collaborators and live cursors.
+
+The AI agent can create diagrams from natural-language instructions. Instead of generating an entire diagram as a single image, it performs individual operations on the canvas, allowing users to observe and modify the resulting elements.
+
+### 4.3 Document Module
+
+The document editor is built using BlockNote.
+
+Features include:
+
+- Creating and editing structured documents.
+- Adding headings, paragraphs, lists, checklists, tables, and code blocks.
+- Drafting document content through AI instructions.
+- Rewriting existing content.
+- Summarizing documents.
+- Updating or deleting individual document blocks.
+- Real-time document collaboration.
+
+The agent can also use information from the canvas to generate supporting written documentation.
+
+### 4.4 AI Agent Module
+
+The AI agent is the central intelligent component of MindSpace AI.
+
+It accepts natural-language instructions and determines which workspace operations are required.
+
+Examples include:
+
+- Creating a marketing funnel diagram.
+- Generating a software architecture diagram.
+- Creating an entity-relationship diagram.
+- Drafting a technical specification.
+- Summarizing an existing document.
+- Converting a canvas diagram into written documentation.
+- Creating a diagram based on existing document content.
+
+The agent can operate on the canvas, the document editor, or both, depending on the user's request.
+
+### 4.5 Dashboard
+
+The dashboard provides access to the user's workspaces.
+
+It includes:
+
+- A natural-language workspace prompt.
+- Recently active workspaces.
+- A workspace creation option.
+- Navigation to the complete workspace board.
+- Access to the user's account and subscription information.
+
+Submitting a prompt creates a workspace and opens it with the agent ready to process the initial instruction.
+
+### 4.6 Workspace Board
+
+The workspace board provides a Kanban-style view of workspaces.
+
+It contains four columns:
+
+1. Planning
+2. In Progress
+3. In Review
+4. Done
+
+Users can move workspace cards between columns and reorder them within a column.
+
+Each workspace stores its status, description, and position.
+
+The board is intended for workspace organization rather than AI-managed task execution.
+
+### 4.7 Collaboration Module
+
+MindSpace AI supports collaboration between members of a workspace.
+
+Features include:
+
+- Real-time canvas synchronization.
+- Live document synchronization.
+- Collaborator cursors and presence indicators.
+- Organization-based access.
+- Public read-only workspace sharing.
+- Shared document and canvas viewing.
+
+Canvas synchronization uses tldraw sync, while document synchronization uses Yjs with Supabase Realtime.
+
+### 4.8 Authentication and Subscription Management
+
+The application uses Clerk for authentication and organization management.
+
+The subscription module provides:
+
+- Personal accounts.
+- Organization-based accounts.
+- Free and paid subscription plans.
+- Usage tracking.
+- Workspace limits.
+- Public sharing restrictions.
+- PDF export restrictions.
+- Subscription management and upgrade options.
+
+## 5. Application Routes
+
+| Route | Description |
 |---|---|
-| `/` | Landing page — hero, demo video, CTA |
-| `/sign-in`, `/sign-up` | Clerk auth |
-| `/dashboard` | Prompt hero (see "Dashboard prompt") plus the 4 most recently active workspaces, with links to the board and "New workspace" |
-| `/workspaces` | Kanban board of all the active org's workspaces (see "Workspace board") |
-| `/workspace/[id]` | Doc + canvas side by side, `?view=doc\|canvas` toggle, agent panel |
-| `/shared/[token]` | Public read-only view of the doc and canvas (see "Sharing & PDF Export") |
-| `/api/agent` | The agent route (Gemini, tools, prompt limits) |
+| `/` | Landing page |
+| `/sign-in` | User authentication |
+| `/sign-up` | User registration |
+| `/dashboard` | Dashboard and recent workspaces |
+| `/workspaces` | Workspace Kanban board |
+| `/workspace/[id]` | Main workspace containing the document editor, canvas, and AI agent |
+| `/shared/[token]` | Public read-only workspace view |
+| `/api/agent` | AI agent API endpoint |
 
-## Core Features
+## 6. System Architecture
 
-### Workspace shell
-- Document / Both / Canvas toggle in the workspace header
-- Global command bar (Cmd+K) to summon the agent from anywhere
-- Persistent agent chat panel, context-aware of the active surface
+MindSpace AI follows a full-stack web application architecture.
 
-### Canvas surface (flagship, most visual)
-- Infinite canvas (tldraw), shapes/text/arrows/freehand
-- Agent streams shapes live from a prompt ("map out a marketing funnel")
-- Follow-up edits: agent reads current canvas state, diffs and edits existing shapes
-- ~~Self-critique pass~~: **cut** (2026-09-28). Diagram layout quality relies on the agent's layout rules instead.
-- Voice input: a mic button (`components/MicButton.tsx`) on the dashboard prompt box and the agent chat panel. Uses the browser's built-in speech recognition to fill the text box with an editable transcript, so no backend and no Gemini quota. Works in Chrome, Edge and Safari; hidden in Firefox, which doesn't support it. Chosen over Gemini native audio so users can fix misheard words before the agent acts.
-- Templates: flowchart, architecture, ERD, user journey, org chart
-- **Live "agent cursor"** (see dedicated section below) — the standout feature
+### 6.1 Frontend
 
-### Docs surface
-- **BlockNote** (block-based, Notion-style editor, built on Tiptap/Prosemirror) — decided over raw Tiptap/Novel
-- Agent can draft, rewrite, or summarize a doc from a prompt
-- Agent can pull content from a canvas into a doc ("write up this diagram as a spec")
-- Uses BlockNote's AI features wired to our own Gemini calls via Vercel AI SDK (consistent with how the canvas is driven), rather than any hosted AI backend
+The frontend is developed using Next.js with the App Router and React.
 
-### Dashboard prompt
-- A prompt box above the board ("What do you want to plan?"), with the mic button. Submitting creates a workspace in the active org (name taken from the prompt's first words, the full prompt as its description) and opens it at `/workspace/<id>?prompt=...`.
-- The workspace opens with the agent panel open and sends the prompt as the first message once both the doc and canvas editors are ready, then removes `prompt` from the URL so a refresh doesn't resend it. The "New workspace" button still creates a blank workspace.
+It handles:
 
-### Workspace board (replaces the cut tasks surface)
-- The board lives on its own page, `/workspaces` (linked from the dashboard's "View board" and the site header), so it gets the full page instead of sitting below the dashboard's prompt hero. It shows the active org's workspaces as cards on a kanban board with fixed columns: Planning → In progress → In review → Done. Cards are a fixed, compact height and show the name plus an optional description (entered in the new-workspace dialog).
-- Drag and drop moves a card between columns and reorders it within a column.
-- Schema: `Workspace.status` (enum `WorkspaceStatus`: PLANNING, IN_PROGRESS, IN_REVIEW, DONE, default PLANNING), `Workspace.description` (optional) and `Workspace.position` (Float, default 0; a dropped card takes a value between its neighbors, so only the moved card is updated).
-- Not live: other members see moves after a refresh.
-- No agent involvement. It's dashboard polish, built after doc collaboration and the agent's doc tools.
-- **Why the tasks surface was cut:** doc + canvas already meet the two-surface rule once the agent acts across both; a third surface means another editor, sync layer and tool set, and a kanban task board is the most common tutorial build, so it's the least distinctive part of the video.
+- User interface rendering.
+- Authentication-aware navigation.
+- Workspace interactions.
+- Canvas and document editing.
+- AI chat interactions.
+- Real-time collaboration interfaces.
+- Subscription and usage displays.
 
-### Collaboration
-- Real-time multiplayer cursors/presence (tldraw sync for canvas; Supabase Realtime for docs)
-- Access: any member of a workspace's Clerk org can open it anytime; no per-workspace member lists
-- Invite by email/link, roles (viewer/editor)
-- ~~Comments/pins~~: **cut** (2026-09-28).
-- Doc callouts: **cut** (2026-09-28). BlockNote's default blocks have no callout, so the landing page lists headings, lists, checklists, tables and code instead.
+### 6.2 Backend
 
-### Account / SaaS layer
-- Clerk auth, org support for team workspaces
-- Usage limits (free tier: capped agent actions/month — exact number and mechanism not yet decided; earlier discussion sketched Free/Pro tiers but nothing was finalized or written up)
-- **Clerk Billing** for Pro subscription (replaces separate Stripe integration — Clerk Billing is built on Stripe under the hood but managed through Clerk directly, keeping auth + billing in one sponsor/provider)
+The backend functionality is implemented through Next.js Server Actions and API routes.
 
-## Live Agent Cursor — Implementation Notes
+Responsibilities include:
 
-The single most "watchable"/clip-worthy feature: a visible cursor + label ("Agent is drawing...") that moves and draws on the canvas in real time, like a second collaborator, instead of a chat log.
+- User synchronization.
+- Workspace creation and management.
+- Database operations.
+- AI agent requests.
+- Usage-limit verification.
+- Subscription and entitlement checks.
+- Saving document and canvas content.
+- Public sharing validation.
 
-**Concept:** Treat the agent as just another collaborator in the existing multiplayer presence system (tldraw sync), driven by the backend instead of a human's mouse.
+### 6.3 Database
 
-**Steps:**
-1. Give the agent a presence identity — synthetic client with `userId: "agent"`, distinct name/color/avatar, broadcast into the same presence channel as human cursors.
-2. Drive cursor movement from the backend agent loop — before/while each tool call executes (e.g. `createRectangle at (x,y)`), push a presence update to that position. Interpolate/animate movement client-side (~200-400ms lerp) rather than teleporting.
-3. Custom cursor component with a labeled pill showing live status text ("thinking...", "drawing rectangle...", "connecting shapes...") driven by the current tool-call name — tldraw supports overriding the default collaborator cursor renderer.
-4. Sequencing for the illusion: cursor arrives at target position **first**, then the shape is created/appears — this ordering is what sells "the agent is actually drawing" rather than shapes just popping in.
-5. Optional polish: trailing pen/ghost-hand icon while drawing; fade cursor in/out on join/idle ("Agent joined the board"); multiple colored cursors if running a planner + critic multi-agent setup.
+Supabase provides PostgreSQL database infrastructure.
 
-**Effort estimate:** roughly half a day to a full day total.
-- Easy (~1-2 hrs): faking agent presence via existing sync APIs — same function a human client would call, fake user ID.
-- Easy-medium (~1-2 hrs): custom cursor UI component with label/status pill.
-- Medium (~2-4 hrs): wiring cursor movement to the tool-call stream in correct sequence/timing.
-- Fiddly bits: smooth interpolation, and choosing sensible cursor waypoints for multi-point shapes (e.g. arrows — use start-point then end-point as two waypoints).
+Prisma ORM is used for database schema management and data access through the PostgreSQL adapter.
 
-No exotic tech required — it's clever reuse of the multiplayer presence system that would already be built for human collaboration.
+### 6.4 AI Integration
 
-## Tech Stack
+Gemini is integrated through the Vercel AI SDK.
 
-| Layer | Choice |
+The AI agent uses structured tools to interact with the canvas and document editor.
+
+### 6.5 Real-Time Infrastructure
+
+Two synchronization mechanisms are used:
+
+- **Canvas:** tldraw sync through a Cloudflare Worker.
+- **Documents:** Yjs collaboration through Supabase Realtime.
+
+### 6.6 High-Level Architecture Flow
+
+1. A user signs in through Clerk.
+2. The application identifies the user's personal or organization workspace context.
+3. Workspace information is retrieved from Supabase through Prisma.
+4. The user interacts with the canvas, document editor, or AI agent.
+5. AI requests are processed through the backend and Gemini.
+6. The agent invokes structured operations on the appropriate editor.
+7. Changes are synchronized with other collaborators.
+8. Document and canvas data are persisted in PostgreSQL.
+
+## 7. Technology Stack
+
+| Layer | Technology |
 |---|---|
-| Framework | Next.js (App Router) |
+| Frontend framework | Next.js (App Router) |
+| UI library | React |
+| Programming language | TypeScript |
 | Canvas | tldraw SDK |
-| Docs editor | BlockNote (MPL 2.0 core, built on Tiptap/Prosemirror) |
-| Realtime sync | tldraw sync (canvas) + Supabase Realtime (docs) — canvas uses tldraw's hosted demo server, see "tldraw Sync Server" below |
-| Auth | Clerk (sponsor) |
-| DB | Supabase (sponsor) — Postgres + Prisma ORM (via `@prisma/adapter-pg`) |
-| File/asset storage | Supabase Storage |
-| AI (agent) | Gemini via Vercel AI SDK (`@ai-sdk/google`) — single provider for the agent and its follow-up edits. Voice input uses the browser's speech recognition instead (see Canvas surface). |
+| Document editor | BlockNote |
+| AI model | Google Gemini |
+| AI integration | Vercel AI SDK |
+| Authentication | Clerk |
+| Organization management | Clerk Organizations |
+| Database | Supabase PostgreSQL |
+| ORM | Prisma |
+| Database adapter | `@prisma/adapter-pg` |
+| Canvas synchronization | tldraw sync |
+| Canvas sync hosting | Cloudflare Workers |
+| Document synchronization | Yjs |
+| Real-time messaging | Supabase Realtime |
+| File storage | Supabase Storage |
+| Styling | Tailwind CSS |
+| UI components | shadcn/ui |
+| Notifications | Sonner |
 | Payments | Clerk Billing |
-| Styling | Tailwind + shadcn/ui |
-| Forms | Plain controlled inputs + Server Actions by default; React Hook Form + Zod only if a form grows complex enough to need it (e.g. a billing upgrade flow) — not a default dependency |
+| PDF generation | BlockNote PDF exporter and jsPDF |
 | Deployment | Vercel |
 
-## tldraw Licensing Notes
+## 8. AI Agent Architecture
 
-- tldraw SDK is **source-available, not fully open-source/MIT** — production use requires a license key (free in dev regardless).
-- License tiers:
-  - **Hobby license** — free, permanent, but shows a **tldraw watermark** in production. This is what we'll use.
-  - **Trial license** — free, no watermark, but expires 100 days after issuance (enforced by the SDK's runtime license check reading the key you pass into `<Tldraw licenseKey="..." />`, not by npm/package restrictions). Not suitable for a tutorial meant to stay working long-term.
-  - **Commercial license** — paid, no watermark, custom sales-quote pricing. Needed only for real production/monetized use.
-- **No key at all (or a key not valid for the domain)** in production → tldraw v5 hides the canvas entirely (its `LicenseGate` renders nothing; localhost is exempt). So the free hobby key, issued for the deployed domain, is required, and `NEXT_PUBLIC_TLDRAW_LICENSE_KEY` must be set in Vercel before the build. Signup is free — it's a ~2 minute form on tldraw.dev (email/GitHub signup, then request hobby license), no payment info required.
-- **Decision for this project:** build and record the entire tutorial without ever signing up or showing a license key — nothing is gated in local dev. Only mention licensing briefly **at the end**, when discussing production deployment ("tldraw needs a free license key for production, grab one from their site, it's free") — a 10-second honest heads-up rather than a mid-tutorial interruption. Get the actual hobby key off-camera after recording, drop into env vars for the live deployed demo.
-- Alternative considered and rejected (but worth remembering): **Excalidraw** is MIT-licensed, fully free forever, no watermark, no key — trade-off is a less polished SDK/API for custom app-building and less AI-native tooling around it currently. Could revisit if licensing friction becomes a bigger issue than expected.
+### 8.1 Agent Design
 
-## tldraw Sync Server
+The AI agent uses fine-grained tools rather than a single operation that generates an entire workspace.
 
-- **Decision (2026-10-01):** the canvas syncs through **our own sync server**, a Cloudflare Worker in `tldraw-sync/`, deployed free to a `*.workers.dev` URL (no custom domain). `NEXT_PUBLIC_TLDRAW_SYNC_URL` points the app at it; left empty, the app falls back to tldraw's public demo server (`useSyncDemo`).
-- **Why:** an ISP (Excitel, India) started DNS-blocking `demo.tldraw.xyz`, so live sync broke for viewers on it. The demo server is also prototyping-only: public rooms, periodic wipes, no uptime guarantee.
-- **How it works:** adapted from tldraw's official template (github.com/tldraw/tldraw-sync-cloudflare). `/connect/<roomId>` routes to one **SQLite-backed Durable Object** per room (`TldrawRoom`), which runs `TLSocketRoom` from `@tldraw/sync-core`, saves the room to its own storage, and hibernates when idle. Durable Objects with SQLite are on the Workers **free plan**.
-- **Kept free:** no R2 bucket (R2 needs a card). Images pasted onto the canvas are stored inside the room as base64 (`inlineBase64AssetStore`). No bookmark unfurling.
-- **Custom shape:** the server validates every change, so it registers the `entity-table` props too (a copy of `components/EntityTable/EntityTableShape.ts`; keep the two in sync). Bindings are registered so arrows can attach.
-- **Versions:** `@tldraw/sync-core`, `tlschema` and `validate` are pinned to the app's tldraw version (5.4.1); client and server must speak the same protocol.
-- **Still open:** rooms aren't access-checked yet (anyone with a room id can join; ids are unguessable cuids). Next step: verify the Clerk session and org membership in the Worker before accepting the WebSocket. The Postgres canvas autosave stays as a backup.
-- **Deploy:** `cd tldraw-sync && npm install && npx wrangler login && npm run deploy`, then set `NEXT_PUBLIC_TLDRAW_SYNC_URL` to the printed `https://outpost-tldraw-sync.<subdomain>.workers.dev` (locally and in Vercel).
+Each tool represents an individual action, allowing the agent to build and modify workspace content incrementally.
 
-## Billing (Clerk Billing)
+The agent can:
 
-- **Plans** (set up in the Clerk dashboard, monthly only, no annual):
-  - Users: default **Free**, and **Pro** (key `pro`), $12/month.
-  - Organizations: default **Free**, **Team** (key `team`), seat-based at $12 per member per month, no base fee, unlimited members; and **Enterprise** (key `enterprise`), seat-based at $25 per member per month with higher limits (`agent_prompts_2000`) plus everything in Team.
-  - **Gating features** (checked by code; never attach to a Free plan): `unlimited_workspaces`, `public_sharing`, `pdf_export`, and the prompt allowances `agent_prompts_500` (Pro, Team; display name "500 agent prompts per seat / month") and `agent_prompts_2000` (Enterprise; "2,000 agent prompts per seat / month").
-  - **Display-only features** (shown on pricing cards, ignored by code; limits are enforced in `lib/plan-limits.ts`): `agent_prompts_20` ("20 agent prompts per month") and `workspaces_3` ("Up to 3 workspaces") on both Free plans; `live_collaboration` ("Live collaboration on docs and canvas") and `voice_input` ("Voice input") on every plan, Free and paid.
-  - Development uses the Clerk development gateway (test payments); connect a real Stripe account before going live.
-- **Shared pricing component** (`components/PricingPlans.tsx`), used in two places: the landing page's pricing section (`#pricing`) and the **upgrade dialog** (`components/UpgradeDialog.tsx`), which any code can open with a reason via `useUpgradeDialog()`, e.g. `openUpgrade({ title: "You're out of agent prompts" })`. The dialog closes itself when checkout starts, since it would otherwise block Clerk's checkout drawer.
-- **Header plan button** (`components/PlanButton.tsx`): inside the app it replaces the Dashboard/Workspaces links. On a free plan it shows **Upgrade** (opens the dialog); on a paid plan it shows the plan's name and opens Clerk's subscription details (only for members who can manage billing). It follows the personal account or the org selected in the switcher and shows the prompts left this month (e.g. `18 left`) with a small progress ring, full detail in the tooltip; free plans open the upgrade dialog on click, paid plans open subscription details.
-- **Pricing card details:** custom cards that load plans, prices and features from Clerk via `usePlans`, with Personal / Team tabs (defaulting to the current context). Paid cards open Clerk's checkout drawer with `CheckoutButton` (`planPeriod="month"`); Team checkout charges the **active organization**, shows "Upgrading <org>", and only members with `org:sys_billing:manage` (admins) can buy. `useSubscription` marks the current plan.
-- `CheckoutButton`, `usePlans` and `useSubscription` come from `@clerk/nextjs/experimental` (Billing is in public beta), so `@clerk/nextjs` and `@clerk/ui` are pinned to exact versions.
-- **Entitlements** (`lib/billing.ts`): every check uses the **workspace owner's** plan (its Clerk org, or its creator for personal workspaces), looked up on the server with Clerk's backend billing API (`getOrganizationBillingSubscription` / `getUserBillingSubscription`). So it works for any workspace regardless of the org selected in the switcher, and for signed-out viewers of shared links. `past_due` keeps access; no subscription or an unreachable Clerk means the free plan.
-- **Limits** (numbers and upgrade messages in `lib/plan-limits.ts`):
-  - **Agent prompts:** 20/month free; `agent_prompts_500` / `agent_prompts_2000` per member (pooled) on paid plans. Every prompt a user sends (not tool follow-ups) is recorded in `AgentPrompt` per owner once Gemini finishes answering (a failed request, e.g. Gemini high demand, costs nothing) and counted per calendar month (UTC); rows survive workspace deletion. `/api/agent` checks the limit **before** calling Gemini and returns HTTP 402 `prompt_limit_reached`; the chat opens the upgrade dialog and shows an inline note.
-  - **Workspaces:** 3 per owner without `unlimited_workspaces`, checked in `createWorkspace`.
-  - **Public links:** need `public_sharing`, checked when turning sharing on and when a shared page is opened (links stop working after a downgrade).
-  - **PDF export:** needs `pdf_export`; the workspace page passes the flag to the Share dialog (export runs in the browser, so this is a UI lock).
-  - Limit results are returned from server actions, not thrown, since Next hides thrown messages in production. Each opens the upgrade dialog with its reason.
+- Inspect the current canvas state.
+- Inspect the current document state.
+- Create new shapes.
+- Modify existing shapes.
+- Delete shapes.
+- Add or update document blocks.
+- Convert information between the canvas and document editor.
 
-## Sharing & PDF Export
+### 8.2 Context Management
 
-- **Share dialog** (header Share button): an on/off switch for a public read-only link, plus Copy and Reset. Turning sharing on (or resetting) generates a fresh `Workspace.shareToken`, so old links stop working; off sets it to null.
-- **Shared page** `/shared/<token>`: no sign-in, read-only doc (from `Doc.content` JSON) and canvas (from the last saved Postgres snapshot, not the live room). Marked noindex.
-- **Doc PDF:** a direct download with real, selectable text, built from the live doc editor by BlockNote's own exporter (`@blocknote/xl-pdf-exporter/react-pdf` + `@react-pdf/renderer`, both lazy-loaded on click). We use the react-pdf variant rather than the newer Typst one, which downloads a 25 MB WebAssembly compiler on first export; the react-pdf variant is marked deprecated but ships in 0.54 and our version is pinned to 0.54.x.
-- **License consequence:** `@blocknote/xl-pdf-exporter` is **GPL-3.0** (or a paid BlockNote Business license). Using it means the Outpost repo itself is released under GPL-3.0: the repo has a `LICENSE` file with the GPL-3.0 text and `"license": "GPL-3.0-only"` in `package.json`. Mention this to viewers: anyone reusing the code in a closed-source product must either drop the PDF exporter or buy BlockNote's commercial license.
-- **Live editors for export:** `WorkspaceEditorsContext` shares the live doc and canvas editors with the header; each export button is disabled while its panel isn't mounted (Document-only or Canvas-only view).
-- **Canvas PDF:** tldraw renders the shapes to a 2x PNG (`editor.toImageDataUrl`), and jsPDF (MIT, lazy-loaded) wraps it in a single page of the same size. Custom ERD tables are included via tldraw's HTML fallback for shapes without `toSvg`.
-- **Known limit:** the shared page reads the saved copies, so edits made in the last second or so (before the debounced save) may be missing there. Exports use the live editors, so they're always current.
+Before each agent invocation, the backend provides the current workspace context.
 
-## Doc Collaboration
+Canvas context includes:
 
-- **How it works:** BlockNote's built-in Yjs collaboration (`CollaborationExtension` from `@blocknote/core/yjs`) handles merging edits and live cursors. The connection between browsers is our own small provider (`lib/supabase-yjs-provider.ts`) on a **Supabase Realtime** broadcast channel per doc (`doc:<workspaceId>`), with events for doc updates, cursors, and newcomers asking peers for unsaved edits.
-- **Saving:** each client saves only its own edits, debounced. The server merges the incoming Yjs state into `Doc.yjsState` inside a row-locked transaction, so simultaneous saves can't lose edits. A readable JSON copy is still saved to `Doc.content` for server-side features (agent, share view).
-- **Old docs:** docs saved before collaboration only have JSON; the first person to open one imports it into the shared doc.
-- **Rejected:** Liveblocks (paid SaaS), `y-supabase` (unmaintained alpha), y-websocket/Hocuspocus (need a server Vercel can't host), y-webrtc (unreliable).
-- **Tutorial scope:** the channel is **public**, so anyone with the anon key and a doc id could join. Tell viewers: for production, use private channels with Supabase Realtime Authorization (RLS on `realtime.messages`) and sign clients in with their Clerk session token via Supabase's Clerk integration.
+- Shape identifiers.
+- Shape types.
+- Labels.
+- Positions.
+- Entity-table information and columns.
 
-## BlockNote Licensing Notes
+Document context includes:
 
-- Core BlockNote library is **MPL 2.0** — free to use in commercial/closed-source apps, no key needed.
-- BlockNote **AI features** are under a separate dual-license ("XL") tier: free if the consuming project is **open source**, otherwise requires a paid commercial license (bundled into their Business subscription).
-- **Decision:** this project is being open-sourced (repo will be public for viewers to clone), so we qualify for free use of BlockNote AI under the open-source exception.
-- **Precisely:** the XL packages are GPL-3.0, so "open source" means the repo must be GPL-3.0 licensed, not just public. XL packages in use: `@blocknote/xl-pdf-exporter` (see "Sharing & PDF Export").
-- Note for future: if this ever pivots to a closed-source/monetized product, BlockNote AI would need a commercial license at that point — the base editor itself would remain free regardless (MPL 2.0).
-- Tiptap (the library BlockNote sits on) has a similar open-core split worth remembering: **core editor is MIT/free**, but Tiptap's own **Cloud Platform** (hosted realtime collab, comments, doc history, their AI Toolkit — from $49/mo, no free tier) is separate and not something we need, since realtime sync/presence is being built ourselves via tldraw sync and Supabase Realtime.
+- Block identifiers.
+- Block types.
+- Document content represented in Markdown.
 
-## Data Layer Patterns
+This allows the agent to work with existing workspace content rather than relying on identifiers or information it has not received.
 
-Reference: [piyush-eon/ai-app-builder](https://github.com/piyush-eon/ai-app-builder) (Forge, the prior agentic-app-builder project) — reusing its proven Clerk + DB pattern rather than redesigning from scratch.
+### 8.3 Canvas Tools
 
-- **ORM: Prisma**, not Drizzle (original stack draft said Drizzle — switched after reviewing the reference repo's working Prisma setup; no strong technical reason to prefer Drizzle for this project specifically, and reusing a battle-tested pattern reduces build risk and video prep time). Uses `@prisma/adapter-pg` driver adapter against Supabase's Postgres connection string — Prisma 7's adapter-based engine resolves the old serverless cold-start concerns that used to favor Drizzle.
-- **User sync pattern (`checkUser`)**: on each authenticated request, look up the local `User` row by `clerkId` and create it on first sight. Plans are **not** copied into the database: Clerk Billing is the only source of truth for subscriptions, read on demand (see "Billing"). Usage is the one billing fact stored locally (`AgentPrompt`).
-- **Data access: Server Actions only** — `"use server"` functions in an `actions/` directory, called directly from client components. No client-side data-fetching library (see TanStack Query decision below).
-- **Schema conventions carried over**: `cuid()` ids, `onDelete: Cascade` on relations back to `User`. Unlike the reference repo's stored credit balance, Outpost counts prompts per month against a plan allowance (see "Billing").
+The canvas tools include:
 
-### Database schema (`prisma/schema.prisma`, Supabase Postgres)
+- `createRectangle`
+- `createEllipse`
+- `createText`
+- `createArrow`
+- `updateShape`
+- `deleteShape`
+- `createEntityTable`
+- `addColumn`
+- `updateColumn`
+- `removeColumn`
+- `connectRelationship`
 
-No member or role tables: org membership and roles live in Clerk Organizations. No plan tables: subscriptions live in Clerk Billing.
+New shapes receive caller-assigned identifiers so that subsequent operations can reference them.
 
-| Model | Key fields | Notes |
+### 8.4 Document Tools
+
+The document tools include:
+
+- `insertDocContent`
+- `updateDocBlock`
+- `deleteDocBlocks`
+- `replaceDoc`
+
+The agent generates Markdown content, which is converted into BlockNote document blocks.
+
+### 8.5 Tool Execution
+
+The tool definitions and validation schemas are maintained in `lib/agent-tools.ts`.
+
+The backend API route is `app/api/agent/route.ts`.
+
+The browser executes editor operations through:
+
+- `lib/agent-canvas.ts`
+- `lib/agent-doc.ts`
+- `hooks/use-workspace-agent-chat.ts`
+
+The tool execution system returns success or error information to the agent.
+
+### 8.6 Agent Cursor and Visual Feedback
+
+A key interaction design is to make AI operations visible on the canvas.
+
+The intended behavior is to display an agent identity and cursor while it performs diagram operations.
+
+The cursor can communicate activity such as:
+
+- Thinking.
+- Drawing a rectangle.
+- Creating a connection.
+- Updating a diagram.
+
+The objective is to make AI-assisted editing understandable and observable rather than presenting only the final generated result.
+
+## 9. Canvas Synchronization Architecture
+
+The canvas uses tldraw's synchronization system.
+
+A dedicated Cloudflare Worker is maintained in the `tldraw-sync/` directory.
+
+### 9.1 Synchronization Flow
+
+The client connects to:
+
+`/connect/[roomId]`
+
+The Worker routes each room to a SQLite-backed Durable Object called `TldrawRoom`.
+
+The Durable Object uses `TLSocketRoom` from `@tldraw/sync-core` to manage room synchronization and persistence.
+
+### 9.2 Asset Handling
+
+Canvas images are stored within the synchronized room using `inlineBase64AssetStore`.
+
+This avoids requiring an additional R2 storage bucket for the current implementation.
+
+### 9.3 Custom Shape Registration
+
+The application includes a custom entity-table shape.
+
+The synchronization server must register the corresponding shape properties and bindings so that custom shapes are validated correctly.
+
+The server-side shape definition must remain consistent with:
+
+`components/EntityTable/EntityTableShape.ts`
+
+### 9.4 Version Compatibility
+
+The following packages must remain compatible with the application's installed tldraw version:
+
+- `@tldraw/sync-core`
+- `@tldraw/tlschema`
+- `@tldraw/validate`
+
+### 9.5 Canvas Persistence
+
+The application also saves canvas snapshots to PostgreSQL.
+
+This provides a backup and allows the application to restore an empty synchronization room using the previously saved canvas content.
+
+### 9.6 Access Control Consideration
+
+Room access validation is an important security requirement.
+
+The Worker should verify the user's Clerk session and organization membership before accepting a WebSocket connection.
+
+Room identifiers should not be treated as a substitute for authorization.
+
+## 10. Document Collaboration Architecture
+
+The document editor uses BlockNote's Yjs collaboration capabilities.
+
+### 10.1 Synchronization
+
+`CollaborationExtension` from `@blocknote/core/yjs` manages collaborative document updates and cursor information.
+
+A custom provider is implemented in:
+
+`lib/supabase-yjs-provider.ts`
+
+It uses Supabase Realtime broadcast channels.
+
+Each document has its own channel:
+
+`doc:[workspaceId]`
+
+### 10.2 Persistence
+
+Each client saves its own document changes after a debounce period.
+
+The backend merges incoming Yjs state into `Doc.yjsState` inside a row-locked database transaction.
+
+A readable JSON representation is also maintained in `Doc.content`.
+
+This readable representation supports server-side functionality, including AI processing and shared workspace viewing.
+
+### 10.3 Existing Documents
+
+Documents created before Yjs collaboration support may contain only JSON content.
+
+When such a document is opened, its existing content is imported into the collaborative document.
+
+### 10.4 Security Consideration
+
+Realtime collaboration channels must be protected.
+
+For production use, private channels and Supabase Realtime Authorization should be implemented with appropriate policies on `realtime.messages`.
+
+Users should authenticate their Supabase connections using their Clerk session identity.
+
+## 11. Database Design
+
+The application uses Supabase PostgreSQL with Prisma ORM.
+
+Organization membership and roles are managed through Clerk Organizations rather than separate local membership tables.
+
+### 11.1 Database Models
+
+| Model | Important Fields | Purpose |
 |---|---|---|
-| `User` | `clerkId` (unique), `email` (unique), `name`, `imageUrl` | Local mirror of the Clerk user, created by `checkUser`. No plan field: plans come from Clerk. |
-| `Workspace` | `name`, `description`, `creatorId` → User, `clerkOrgId` (null = personal), `status` (enum `WorkspaceStatus`), `position` (Float), `shareToken` (unique, null = sharing off) | Indexed on `creatorId` and `clerkOrgId`. `status` + `position` place it on the board. |
-| `Doc` | `workspaceId` (unique), `yjsState` (Bytes), `content` (JSON) | 1:1 with Workspace. `yjsState` is the real-time collaboration source of truth; `content` is a readable JSON copy for server-side use (shared page). |
-| `Canvas` | `workspaceId` (unique), `content` (JSON) | 1:1 with Workspace. Last saved tldraw snapshot: the backup that re-seeds an empty sync room and feeds the shared page. |
-| `AgentPrompt` | `ownerId` (Clerk org or user id), `userId` → User, `workspaceId` → Workspace (nullable), `createdAt` | One row per prompt sent. Indexed on (`ownerId`, `createdAt`) for monthly counts. |
+| `User` | `clerkId`, `email`, `name`, `imageUrl` | Local representation of an authenticated Clerk user |
+| `Workspace` | `name`, `description`, `creatorId`, `clerkOrgId`, `status`, `position`, `shareToken` | Stores workspace information and ownership |
+| `Doc` | `workspaceId`, `yjsState`, `content` | Stores document content and collaboration state |
+| `Canvas` | `workspaceId`, `content` | Stores the latest canvas snapshot |
+| `AgentPrompt` | `ownerId`, `userId`, `workspaceId`, `createdAt` | Tracks AI prompt usage |
 
-**Deletion:** Doc and Canvas cascade with their Workspace; AgentPrompt rows are kept (`workspaceId` set to null) so usage can't be reset by deleting a workspace; everything cascades with its User.
+### 11.2 Relationships
 
-**Migrations** (in `prisma/migrations/`, oldest first):
-1. `init`: initial User / workspace tables.
-2. `switch_to_clerk_orgs`, `require_clerk_org_id`: workspaces keyed to Clerk orgs instead of local membership.
-3. `doc_canvas_workspace_model`: every workspace gets exactly one Doc and one Canvas.
-4. `workspace_board`, `backfill_workspace_positions`: board `status` + `position`, with existing workspaces numbered by recency.
-5. `workspace_review_and_description`: `IN_REVIEW` status and `description`.
-6. `doc_yjs_state`: `Doc.yjsState` for real-time doc collaboration.
-7. `workspace_share_token`: `Workspace.shareToken` for public links.
-8. `agent_prompt_usage`: replaced the never-used `AgentActionLog` (one row per tool call) with `AgentPrompt` (one row per prompt).
-9. `drop_user_plan`: removed the unused `User.plan` column and `Plan` enum.
+- A user can create multiple workspaces.
+- A workspace belongs to its creator and may belong to a Clerk organization.
+- Each workspace has one associated document.
+- Each workspace has one associated canvas.
+- Agent prompt records track usage by the relevant workspace owner.
+- Deleting a workspace removes its associated document and canvas.
+- Agent prompt records are retained so deleting a workspace cannot reset usage counts.
 
-**Workflow note:** when `prisma migrate dev` can't run (non-interactive environments, or warnings it wants confirmed), the migration SQL is generated with `prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --script`, reviewed, saved as a new migration folder, and applied with `prisma migrate deploy`; a second `migrate diff` should then print an empty migration. After any schema change, run `prisma generate` and restart the dev server.
+### 11.3 Workspace Status
 
-### TanStack Query — decided against
+The `WorkspaceStatus` enum contains:
 
-The reference repo uses zero client-side fetching libraries: Server Components for reads, Server Actions + `revalidatePath`/`router.refresh()` for writes. Decided to follow the same pattern for Outpost rather than introduce TanStack Query.
+- `PLANNING`
+- `IN_PROGRESS`
+- `IN_REVIEW`
+- `DONE`
 
-Where it might have seemed tempting — the canvas surface's live agent state (tool-call progress, streaming status, presence) — isn't actually a "fetch and cache" problem, it's a subscribe-to-a-stream problem, which the Vercel AI SDK's own streaming hooks and tldraw sync's presence system already handle natively. Adding TanStack Query on top would be a second, redundant state-management paradigm for something already covered. Server Actions remain the default everywhere else (dashboard, board, docs CRUD).
+The `position` field determines the card's ordering within a board column.
 
-### `useFetch` — standard client-side wrapper for mutation Server Actions
+### 11.4 Database Migrations
 
-In place of TanStack Query, adopt a small hand-rolled hook to wrap Server Action calls triggered from client components (button clicks, form submits) — gives `data`/`loading`/`error` state plus an automatic error toast, without pulling in a full caching library. Appropriately scoped given the Server-Actions-first decision above: this covers the "single request/response mutation" case; it does NOT cover the canvas/agent streaming case, which stays on the AI SDK's streaming hooks and tldraw sync.
+The database migration history includes:
 
-```ts
-import { useState } from "react";
-import { toast } from "sonner";
+1. Initial user and workspace tables.
+2. Migration to Clerk organization-based workspaces.
+3. Document and canvas workspace models.
+4. Workspace board status and position.
+5. Workspace review status and descriptions.
+6. Yjs document state.
+7. Workspace public-sharing tokens.
+8. AI prompt usage tracking.
+9. Removal of the unused local user plan field.
 
-function useFetch<T, Args extends unknown[]>(cb: (...args: Args) => Promise<T>) {
-  const [data, setData] = useState<T | undefined>(undefined);
-  const [loading, setLoading] = useState<boolean | null>(null);
-  const [error, setError] = useState<Error | null>(null);
+### 11.5 Migration Workflow
 
-  const fn = async (...args: Args) => {
-    setLoading(true);
-    setError(null);
+When interactive migration generation is unavailable, migration SQL can be generated using Prisma's migration diff functionality.
 
-    try {
-      const response = await cb(...args);
-      setData(response);
-      setError(null);
-    } catch (err) {
-      const e = err as Error;
-      setError(e);
-      toast.error(e.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+The generated SQL should be reviewed, saved in a new migration directory, and applied using `prisma migrate deploy`.
 
-  return { data, loading, error, fn, setData };
-}
+After schema changes, regenerate Prisma Client and restart the development server.
 
-export default useFetch;
-```
+## 12. Data Access and Server Actions
 
-**Where it applies**: workspace create/rename/delete, invite member, plan-upgrade click — any button-triggered Server Action mutation from a client component. **Where it doesn't**: canvas/agent streaming state (not a single request/response shape).
+The application follows a Server-Actions-first data access approach.
 
-## Agent Tool-Call Schema
+Server Components are used for server-side reads, while Server Actions handle mutations.
 
-Fine-grained primitives, not coarse composite tools — one tool per tldraw shape primitive, so the agent composes a diagram from many small calls. This is what makes the live agent cursor's "drawing shape by shape" effect work naturally: each tool call is one clean, visible, animatable step, rather than a big structured object rendered all at once with an artificially staggered reveal.
+Examples include:
 
-**Context injection (decided): Option A — always inject current canvas state before every agent turn.** Before each agent invocation, the backend reads current shapes (id, type, label, position) and includes them in context, so the model only ever references real shape ids it's actually been told about — rather than inventing/recalling ids and relying on tool-level error-and-retry to self-correct. Costs some extra tokens on every call, but keeps agent behavior reliable for a live demo, which matters more here than the token savings from the leaner alternative.
+- Creating workspaces.
+- Renaming workspaces.
+- Deleting workspaces.
+- Updating workspace status.
+- Saving document content.
+- Saving canvas snapshots.
+- Inviting workspace members.
 
-**Where it lives:** `lib/agent-tools.ts` is the single source of every tool's description and Zod schema; the API route (`app/api/agent/route.ts`) passes them to `streamText` with no `execute`, and the browser runs them against the live editors (`lib/agent-canvas.ts`, `lib/agent-doc.ts`, routed by `hooks/use-workspace-agent-chat.ts`). Every request, including the automatic follow-ups after tool calls, carries a fresh summary of both the canvas (shape ids, labels, table columns) and the doc (block ids, types, Markdown). A tool always returns `{ success }` or `{ success: false, error }`, including when its surface isn't open, so the chat never hangs waiting on a missing output.
+The application does not require a separate client-side fetching and caching library for these operations.
 
-**Canvas tools:** `createRectangle`, `createEllipse`, `createText`, `createArrow`, `updateShape`, `deleteShape`, plus the ERD tools `createEntityTable`, `addColumn`, `updateColumn`, `removeColumn`, `connectRelationship` (anchors the arrow on the named PK and FK rows). New shapes take a **caller-assigned `id`** so later calls in the same turn can reference them; existing shapes are referenced by their real ids from the context.
+Streaming AI responses and real-time editor updates are handled through their respective synchronization mechanisms.
 
-**Doc tools:** the model writes Markdown, which BlockNote parses into blocks. `insertDocContent` (append, or after a block id; fills an empty doc), `updateDocBlock` (rewrites a block in place, keeping its id), `deleteDocBlocks`, `replaceDoc` (full rewrites only).
+### 12.1 Mutation Handling
 
-**Choosing the surface:** if the user names one ("in the doc", "just the diagram"), only that one changes. Otherwise the agent decides from the request (visual structure on the canvas, prose in the doc, both when needed) and can convert between them ("write up this diagram as a spec", "draw what the doc describes"). This cross-surface editing is what earns the "workspace" naming.
+A reusable `useFetch` hook provides a consistent way to manage Server Action requests from client components.
 
-**Follow-up edits are not separate tools**: they reuse the same tools with the current state as context. (A self-critique pass was planned the same way, as a second "review for overlaps" prompt, but was cut on 2026-09-28.)
+It maintains:
 
-## Open / Next Steps (not yet decided)
+- Response data.
+- Loading state.
+- Error state.
+- An execution function.
+- A data setter.
 
-- Chapter-by-chapter video outline / script — not yet created.
-- Final title/thumbnail line — leaning toward "Agentic Workspace App" but not locked.
-- Landing page copy still promises one feature that isn't built: canvas templates. The self-critique pass, comments/pins and doc callouts were cut on 2026-09-28 and removed from the copy; agent cursor wording was removed earlier (the hero's cursor visual was replaced by the walkthrough video).
+Errors are displayed through Sonner notifications.
+
+This approach is intended for individual request-and-response operations rather than streaming AI or collaboration state.
+
+## 13. Authentication and Subscription Management
+
+Clerk handles user authentication and organization management.
+
+Clerk Billing manages personal and organization subscriptions.
+
+### 13.1 Subscription Plans
+
+The planned subscription structure includes:
+
+| Account Type | Plan | Pricing |
+|---|---|---|
+| Personal | Free | Free |
+| Personal | Pro | $12/month |
+| Organization | Free | Free |
+| Organization | Team | $12/member/month |
+| Organization | Enterprise | $25/member/month |
+
+These are the configured design values and should be verified against the live Clerk Billing dashboard before production use.
+
+### 13.2 Entitlements
+
+Subscription entitlements include:
+
+- `unlimited_workspaces`
+- `public_sharing`
+- `pdf_export`
+- `agent_prompts_500`
+- `agent_prompts_2000`
+
+The free plans have display limits for workspace count and AI prompts.
+
+### 13.3 Usage Limits
+
+The planned limits include:
+
+- 20 AI prompts per month on free plans.
+- 500 prompts per member per month on eligible paid plans.
+- 2,000 prompts per member per month on the Enterprise plan.
+- Three workspaces on free plans.
+- Unlimited workspaces on eligible paid plans.
+
+AI prompt usage is recorded in the `AgentPrompt` table.
+
+Usage is counted per calendar month in UTC.
+
+A prompt is recorded after Gemini successfully completes its response. Failed requests do not consume the allowance.
+
+The `/api/agent` endpoint checks usage before invoking Gemini and returns HTTP 402 when the prompt limit is reached.
+
+### 13.4 Workspace Ownership
+
+Subscription checks use the workspace owner's subscription context.
+
+For organization workspaces, the organization subscription is used.
+
+For personal workspaces, the creator's personal subscription is used.
+
+This ensures access checks do not depend on which organization is currently selected in the user's account switcher.
+
+## 14. Workspace Sharing and PDF Export
+
+### 14.1 Public Sharing
+
+The application provides a Share dialog that allows eligible users to enable or disable public read-only access.
+
+Enabling sharing generates a `Workspace.shareToken`.
+
+The shared page is accessible through:
+
+`/shared/[token]`
+
+The shared page does not require authentication and displays saved document and canvas content in read-only mode.
+
+The shared page is marked `noindex`.
+
+Resetting the sharing token invalidates previously generated links.
+
+### 14.2 Document PDF Export
+
+Document PDF export uses BlockNote's PDF exporter with React PDF.
+
+The export provides selectable text rather than a screenshot of the document.
+
+The exporter is loaded when the user requests an export.
+
+### 14.3 Canvas PDF Export
+
+Canvas export uses tldraw to render the canvas into an image.
+
+The image is then placed into a PDF using jsPDF.
+
+Custom entity-table shapes are included through the applicable rendering fallback.
+
+### 14.4 Export Limitations
+
+The shared page reads saved copies of document and canvas data.
+
+Because saving is debounced, very recent edits may not immediately appear on the shared page.
+
+PDF exports use the live editor instances and therefore include the latest editor content.
+
+## 15. Licensing and Third-Party Dependencies
+
+MindSpace AI uses several third-party libraries and services. Their licenses and usage requirements must be respected.
+
+### 15.1 tldraw
+
+The tldraw SDK is source-available and has separate licensing requirements for production use.
+
+The project uses a hobby license where applicable.
+
+A valid license key must be configured for the deployed domain using:
+
+`NEXT_PUBLIC_TLDRAW_LICENSE_KEY`
+
+The license conditions, including production watermark requirements, must be checked against the applicable tldraw license agreement.
+
+### 15.2 BlockNote
+
+The core BlockNote library is licensed under MPL 2.0.
+
+Some extended packages, including the PDF exporter, are licensed separately under GPL-3.0 or require a commercial license.
+
+The project includes GPL-3.0 licensing because of the use of applicable GPL-licensed dependencies.
+
+The repository must retain its `LICENSE` file and required third-party notices.
+
+Anyone redistributing or modifying the project must comply with the applicable licenses.
+
+### 15.3 Other Dependencies
+
+The application also uses libraries and services with their own licensing terms, including:
+
+- Next.js
+- React
+- Prisma
+- Supabase
+- Clerk
+- Google Gemini
+- Vercel AI SDK
+- Yjs
+- Tailwind CSS
+- shadcn/ui
+- jsPDF
+
+Their licenses and service terms should be reviewed before commercial distribution.
+
+## 16. Security and Reliability Considerations
+
+The following areas are important for a production-ready implementation:
+
+1. Verify user authentication for protected routes and Server Actions.
+2. Validate workspace ownership and organization membership before accessing data.
+3. Enforce access restrictions on shared workspace links.
+4. Protect tldraw synchronization rooms with server-side authorization.
+5. Secure Supabase Realtime collaboration channels.
+6. Validate AI tool inputs before applying editor operations.
+7. Enforce subscription and usage limits on the server rather than relying only on frontend controls.
+8. Keep secret API keys in server-side environment variables.
+9. Avoid exposing database credentials or private service keys to the browser.
+10. Handle AI failures and synchronization interruptions without losing existing workspace content.
+
+## 17. Deployment and Environment Configuration
+
+The Next.js application is deployed through Vercel.
+
+The tldraw synchronization server is deployed separately through Cloudflare Workers.
+
+The application requires environment configuration for its external services.
+
+Important variables include:
+
+| Variable | Purpose |
+|---|---|
+| `DATABASE_URL` | PostgreSQL connection |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk frontend configuration |
+| `CLERK_SECRET_KEY` | Clerk server authentication |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase public client key |
+| `GOOGLE_GENERATIVE_AI_API_KEY` | Gemini API access |
+| `NEXT_PUBLIC_TLDRAW_SYNC_URL` | Cloudflare canvas sync server |
+| `NEXT_PUBLIC_TLDRAW_LICENSE_KEY` | tldraw production license |
+
+Actual secret values must be stored securely in environment configuration and must not be committed to the public repository.
+
+### 17.1 Canvas Sync Deployment
+
+The synchronization Worker is maintained in:
+
+`tldraw-sync/`
+
+Its deployment configuration is maintained in:
+
+`tldraw-sync/wrangler.toml`
+
+The Worker name is:
+
+`mindspace-ai-tldraw-sync`
+
+After deployment, its URL must be configured through `NEXT_PUBLIC_TLDRAW_SYNC_URL`.
+
+The application can use tldraw's public demo server as a development fallback when the custom synchronization URL is not configured. The demo server is not suitable for production because rooms may be public and temporary.
+
+## 18. Current Development Considerations
+
+The following items require additional verification or implementation before the application can be considered production-ready:
+
+- Verify authentication and organization membership in the Cloudflare synchronization Worker.
+- Configure private Supabase Realtime channels and authorization policies.
+- Verify Clerk Billing plans and entitlements in the production dashboard.
+- Confirm the tldraw license is valid for the deployed domain.
+- Test workspace and document persistence.
+- Test canvas synchronization across multiple users.
+- Test document collaboration across multiple users.
+- Test AI operations across both workspace surfaces.
+- Verify subscription limits and access restrictions.
+- Test public sharing and PDF export.
+- Validate the application across desktop and mobile screen sizes.
+- Complete any remaining visual and accessibility improvements.
+
+These items should be marked complete only after implementation and testing.
+
+## 19. Conclusion
+
+MindSpace AI brings AI-assisted diagram creation, document editing, and collaborative workspace management together in a single application.
+
+Its central feature is an AI agent capable of working across both visual and written content. By combining natural-language interaction with structured editor operations, the application aims to make planning, documentation, and collaboration more accessible and efficient.
+
+The project demonstrates the integration of modern full-stack web technologies, AI tool execution, real-time collaboration, database persistence, authentication, and subscription management in one unified workspace.
+
+**MindSpace AI — Where ideas find their space to grow.**

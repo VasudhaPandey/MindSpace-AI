@@ -10,10 +10,8 @@ import { AUDIENCES, STEPS, SURFACES } from "./_data/landing";
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col overflow-hidden bg-[#091610]">
-
       {/* HERO SECTION */}
       <section className="topo-bg relative isolate overflow-hidden border-b border-emerald-400/10 bg-gradient-to-b from-[#10271C] via-[#0C1D15] to-[#091610] px-6 pb-24 pt-10 md:px-10 md:pt-16">
-
         <div className="pointer-events-none absolute -left-40 top-0 -z-0 size-[500px] rounded-full bg-emerald-500/15 blur-[140px]" />
         <div className="pointer-events-none absolute -right-32 top-20 -z-0 size-[450px] rounded-full bg-teal-400/10 blur-[130px]" />
         <div className="pointer-events-none absolute bottom-0 left-1/2 -z-0 h-64 w-[700px] -translate-x-1/2 rounded-full bg-green-500/10 blur-[110px]" />
@@ -25,11 +23,11 @@ export default function Home() {
             <SectionLabel>Early access</SectionLabel>
 
             <h1 className="mt-2 max-w-3xl text-4xl font-semibold tracking-tight text-[#EAF5ED] md:text-6xl">
-              An{" "}
+              Your{" "}
               <span className="bg-gradient-to-r from-emerald-400 via-green-300 to-teal-300 bg-clip-text text-transparent">
-                outpost
+                MindSpace
               </span>{" "}
-              for whatever you&apos;re building
+              for everything you&apos;re building
             </h1>
 
             <p className="mt-6 max-w-xl text-lg text-[#B3C8B9]">
@@ -68,7 +66,7 @@ export default function Home() {
                 loop
                 playsInline
                 poster="/videos/hero-poster.jpg"
-                aria-label="Outpost walkthrough: the agent draws an architecture diagram and writes the spec"
+                aria-label="MindSpace AI walkthrough: the agent draws an architecture diagram and writes the spec"
                 className="size-full object-cover"
               >
                 <source src="/videos/hero.webm" type="video/webm" />
@@ -115,7 +113,7 @@ export default function Home() {
             </h2>
 
             <p className="mt-4 text-[#AFC4B5]">
-              Outpost isn&apos;t another AI diagram generator. The same agent
+              MindSpace AI isn&apos;t another AI diagram generator. The same agent
               reasons across your canvas and your docs, turning a rough sketch
               into a written spec without you copying anything by hand. And your
               team is right there with you.
@@ -308,7 +306,6 @@ function Step({
 }) {
   return (
     <div className="group relative overflow-hidden rounded-2xl border border-emerald-300/15 bg-gradient-to-br from-[#1B3A2A] via-[#142B20] to-[#102119] p-6 shadow-[0_8px_25px_rgba(0,0,0,0.2)] transition-all duration-500 hover:-translate-y-1.5 hover:border-emerald-300/50 hover:bg-[#1B3828] hover:shadow-[0_0_20px_rgba(32,168,121,0.25),0_0_50px_rgba(32,168,121,0.15),0_15px_40px_rgba(0,0,0,0.35)]">
-
       {/* Waypoint */}
       <div className="flex items-center gap-3">
         <span className="flex size-9 shrink-0 items-center justify-center rounded-full border border-emerald-300/40 bg-emerald-400/10 font-mono text-xs text-emerald-300 shadow-[0_0_15px_rgba(52,211,153,0.10)] transition-all group-hover:bg-emerald-400/20 group-hover:shadow-[0_0_18px_rgba(52,211,153,0.25)]">
