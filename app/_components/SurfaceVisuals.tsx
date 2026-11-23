@@ -1,5 +1,6 @@
-// Static mock UIs for the landing page's "three surfaces" section — not interactive,
-// just enough visual detail to read as a real product screen rather than an empty box.
+
+ // Static mock UIs for the landing page's "three surfaces" section — not interactive,
+ // just enough visual detail to read as a real product screen rather than an empty box.
 
 export function CanvasMock() {
   return (
@@ -7,7 +8,7 @@ export function CanvasMock() {
       <svg viewBox="0 0 100 62.5" className="h-full w-full">
         <defs>
           <marker id="mockArrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-            <path d="M0,0 L6,3 L0,6 Z" fill="oklch(0.74 0.16 55)" />
+            <path d="M0,0 L6,3 L0,6 Z" fill="var(--primary)" />
           </marker>
         </defs>
         <rect x="10" y="14" width="26" height="15" rx="1.5" className="fill-white/6 stroke-white/25" strokeWidth="0.4" />
@@ -17,13 +18,13 @@ export function CanvasMock() {
           <tspan x="75">Send welcome</tspan>
           <tspan x="75" dy="3.8">email</tspan>
         </text>
-        <line x1="36" y1="21.5" x2="61" y2="21.5" stroke="oklch(0.74 0.16 55)" strokeWidth="0.5" markerEnd="url(#mockArrow)" />
+        <line x1="36" y1="21.5" x2="61" y2="21.5" stroke="var(--primary)" strokeWidth="0.5" markerEnd="url(#mockArrow)" />
         <rect x="36" y="38" width="26" height="15" rx="1.5" className="fill-white/6 stroke-white/25" strokeWidth="0.4" />
         <text x="49" y="45" textAnchor="middle" className="fill-foreground text-[3px]">
           <tspan x="49">Onboarding</tspan>
           <tspan x="49" dy="3.8">checklist</tspan>
         </text>
-        <path d="M75 29 Q 75 38 62 44" fill="none" stroke="oklch(0.74 0.16 55)" strokeWidth="0.5" markerEnd="url(#mockArrow)" />
+        <path d="M75 29 Q 75 38 62 44" fill="none" stroke="var(--primary)" strokeWidth="0.5" markerEnd="url(#mockArrow)" />
       </svg>
     </Frame>
   );
@@ -56,21 +57,29 @@ export function DocsMock() {
 export function BoardMock() {
   const columns = [
     { title: "Planning", cards: [{ live: null }, { live: null }] },
-    { title: "In progress", cards: [{ live: "bg-sky-400" }, { live: null }] },
-    { title: "In review", cards: [{ live: "bg-violet-400" }] },
+    { title: "In progress", cards: [{ live: "bg-emerald-400" }, { live: null }] },
+    { title: "In review", cards: [{ live: "bg-teal-400" }] },
     { title: "Done", cards: [{ live: null }, { live: null }, { live: null }] },
   ];
+
   return (
     <Frame>
       <div className="grid h-full grid-cols-4 gap-2 p-4">
         {columns.map((col) => (
           <div key={col.title} className="flex flex-col gap-2 rounded-lg bg-white/3 p-2">
-            <span className="text-[9px] font-medium whitespace-nowrap text-muted-foreground">{col.title}</span>
+            <span className="text-[9px] font-medium whitespace-nowrap text-muted-foreground">
+              {col.title}
+            </span>
             {col.cards.map((card, i) => (
-              <div key={i} className="flex h-12 flex-col gap-1.5 rounded-md border border-white/10 bg-white/6 p-2">
+              <div
+                key={i}
+                className="flex h-12 flex-col gap-1.5 rounded-md border border-white/10 bg-white/6 p-2"
+              >
                 <div className="h-1.5 w-3/4 rounded bg-white/20" />
                 <div className="h-1 w-full rounded bg-white/8" />
-                {card.live && <span className={`mt-auto size-2 self-end rounded-full ${card.live}`} />}
+                {card.live && (
+                  <span className={`mt-auto size-2 self-end rounded-full ${card.live}`} />
+                )}
               </div>
             ))}
           </div>

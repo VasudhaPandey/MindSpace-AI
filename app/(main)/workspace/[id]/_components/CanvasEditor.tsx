@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useMemo, useRef } from "react";
@@ -41,7 +42,10 @@ const SYNC_URL = process.env.NEXT_PUBLIC_TLDRAW_SYNC_URL;
 // a new array on every render would make useSync rebuild the store in a loop.
 const syncShapeUtils = [...defaultShapeUtils, ...shapeUtils];
 
-type SyncOptions = { roomId: string; users?: Parameters<typeof useSyncDemo>[0]["users"] };
+type SyncOptions = {
+  roomId: string;
+  users?: Parameters<typeof useSyncDemo>[0]["users"];
+};
 
 // Chosen once at load, so it's always the same hook. Images are stored inside the room.
 const useCanvasSync = SYNC_URL
@@ -85,8 +89,10 @@ export function CanvasEditor({
   const userId = user?.id;
   const userName = user?.fullName ?? user?.username ?? "Anonymous";
   const userImageUrl = user?.imageUrl ?? "";
+
   const users = useMemo(() => {
     if (!userId) return undefined;
+
     return {
       currentUser: atom(
         "currentUser",
@@ -104,6 +110,7 @@ export function CanvasEditor({
   // pin its name/color to Clerk too, keeping every other preference from tldraw's local storage.
   const currentUser = useMemo(() => {
     if (!userId) return undefined;
+
     return createTLCurrentUser({
       userPreferences: computed("clerkUserPreferences", () => ({
         ...getUserPreferences(),
@@ -119,6 +126,7 @@ export function CanvasEditor({
 
   const handleMount = (editor: Editor) => {
     setCanvasEditor(editor);
+
     // Seed from Postgres only when the room is empty, so a joining user doesn't overwrite
     // what others have already drawn.
     if (initialSnapshot && editor.getCurrentPageShapeIds().size === 0) {
@@ -128,6 +136,7 @@ export function CanvasEditor({
     editor.store.listen(
       () => {
         if (saveTimeout.current) clearTimeout(saveTimeout.current);
+
         saveTimeout.current = setTimeout(() => {
           // getSnapshot() carries non-plain internals (schema is a class instance, not JSON) that
           // occasionally fail to cross the Server Action boundary as "opaque temporary reference"
@@ -135,6 +144,7 @@ export function CanvasEditor({
           const plainSnapshot = JSON.parse(
             JSON.stringify(editor.getSnapshot())
           ) as Prisma.InputJsonValue;
+
           saveCanvasContent(workspaceId, plainSnapshot);
         }, SAVE_DEBOUNCE_MS);
       },
@@ -160,7 +170,7 @@ export function CanvasEditor({
   return (
     // isolate keeps tldraw's high z-index layers inside the canvas, so dialogs render above them.
     // The toolbar moves up into the space left by the hidden page menu (! beats tldraw.css).
-    <div className="isolate h-full [&_.tlui-main-toolbar--vertical]:top-4!">
+    <div className="mindspace-tldraw isolate h-full [&_.tlui-main-toolbar--vertical]:top-4!">
       <Tldraw
         store={store}
         user={currentUser}
