@@ -1,3 +1,4 @@
+
 import { useEditor, createShapeId } from "tldraw";
 import { TABLE_WIDTH, getTableHeight, newRow } from "@/components/EntityTable/EntityTableShape";
 
@@ -15,7 +16,10 @@ export function AddEntityTableButton() {
       y: center.y - getTableHeight(2) / 2,
       props: {
         tableName: "new_table",
-        rows: [newRow({ name: "id", dataType: "uuid", isPK: true }), newRow({ name: "created_at", dataType: "timestamptz" })],
+        rows: [
+          newRow({ name: "id", dataType: "uuid", isPK: true }),
+          newRow({ name: "created_at", dataType: "timestamptz" }),
+        ],
       },
     });
     editor.select(id);
@@ -25,7 +29,7 @@ export function AddEntityTableButton() {
     <button
       onClick={handleClick}
       title="Add table"
-      className="flex size-12 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-white/8 hover:text-foreground"
+      className="flex size-12 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-emerald-400/10 hover:text-emerald-300"
     >
       <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.4">
         <rect x="2" y="2" width="14" height="14" rx="1.5" />

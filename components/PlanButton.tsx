@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -8,7 +9,7 @@ import { useUpgradeDialog } from "@/components/UpgradeDialog";
 
 type Usage = Awaited<ReturnType<typeof getActivePromptUsage>>;
 
-const USAGE_CHANGED_EVENT =  "mindspace:prompt-usage-changed";
+const USAGE_CHANGED_EVENT = "mindspace:prompt-usage-changed";
 
 // Called after an agent response, so the header count stays current without a reload.
 export function refreshPromptUsage() {
@@ -57,7 +58,7 @@ export function PlanButton({ upgradeOnlyWhenOut = false }: { upgradeOnlyWhenOut?
       type="button"
       title={`${used.toLocaleString()} of ${limit.toLocaleString()} agent prompts used this month`}
       onClick={isPaid ? undefined : upgrade}
-      className="flex h-full items-center gap-2.5 px-3 transition-colors hover:bg-white/5"
+      className="flex h-full items-center gap-2.5 px-3 transition-colors hover:bg-primary/10"
     >
       <span className="font-medium text-foreground">{planName}</span>
       <span className="h-1 w-12 overflow-hidden rounded-full bg-white/10">

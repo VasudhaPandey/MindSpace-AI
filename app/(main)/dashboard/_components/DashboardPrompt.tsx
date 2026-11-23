@@ -51,16 +51,14 @@ export function DashboardPrompt() {
 
   return (
     <section className="topo-bg relative isolate mx-auto mb-14 w-full max-w-5xl overflow-hidden rounded-[2rem] border border-emerald-400/15 bg-gradient-to-br from-[#173A29] via-[#102B20] to-[#0B2018] px-5 py-14 text-center shadow-[0_20px_70px_rgba(0,0,0,0.25)] md:px-10 md:py-16">
-
-      {/* Ambient emerald and cyan lighting */}
+      {/* Ambient emerald and teal lighting */}
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute -left-24 -top-32 size-80 rounded-full bg-emerald-400/[0.13] blur-[100px]" />
-        <div className="absolute -right-20 top-0 size-80 rounded-full bg-cyan-400/[0.09] blur-[110px]" />
+        <div className="absolute -right-20 top-0 size-80 rounded-full bg-emerald-400/[0.08] blur-[110px]" />
         <div className="absolute bottom-[-180px] left-[35%] size-96 rounded-full bg-teal-400/[0.08] blur-[110px]" />
       </div>
 
       <div className="relative mx-auto max-w-3xl">
-
         {/* Small label */}
         <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-300/20 bg-emerald-300/[0.08] px-3.5 py-1.5 shadow-[0_0_20px_rgba(16,185,129,0.08)]">
           <Sparkles className="size-3.5 text-emerald-300" />
@@ -71,7 +69,7 @@ export function DashboardPrompt() {
 
         <h2 className="text-3xl font-semibold tracking-tight text-white md:text-5xl">
           What are we{" "}
-          <span className="bg-gradient-to-r from-emerald-300 via-teal-200 to-cyan-300 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-300 via-teal-200 to-emerald-300 bg-clip-text text-transparent">
             planning today?
           </span>
         </h2>
@@ -112,7 +110,7 @@ export function DashboardPrompt() {
                 onClick={handleSubmit}
                 disabled={!prompt.trim() || busy}
                 aria-label="Create workspace"
-                className="size-10 rounded-full border border-emerald-200/30 bg-gradient-to-br from-emerald-400 to-teal-500 text-[#062015] shadow-[0_0_18px_rgba(16,185,129,0.25)] transition-all duration-300 hover:scale-105 hover:from-emerald-300 hover:to-cyan-400 hover:shadow-[0_0_28px_rgba(16,185,129,0.4)] disabled:opacity-40"
+                className="size-10 rounded-full border border-emerald-200/30 bg-gradient-to-br from-emerald-400 to-teal-500 text-[#062015] shadow-[0_0_18px_rgba(16,185,129,0.25)] transition-all duration-300 hover:scale-105 hover:from-emerald-300 hover:to-teal-400 hover:shadow-[0_0_28px_rgba(16,185,129,0.4)] disabled:opacity-40"
               >
                 <ArrowUp className="size-4" />
               </Button>

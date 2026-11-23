@@ -1,17 +1,34 @@
 
-// BlockNote's built-in "dark" theme ships its own (brownish) palette, not ours — override with
-// the app's actual tokens from globals.css so the doc panel matches the rest of the UI exactly.
+// BlockNote theme aligned with MindSpace AI's deep forest-green palette.
 export const mindSpaceDarkTheme = {
   colors: {
-    editor: { text: "oklch(0.98 0 0)", background: "oklch(0.12 0 0)" },
-    menu: { text: "oklch(0.98 0 0)", background: "oklch(0.17 0 0)" },
-    tooltip: { text: "oklch(0.98 0 0)", background: "oklch(0.17 0 0)" },
-    hovered: { text: "oklch(0.98 0 0)", background: "oklch(0.24 0 0)" },
-    selected: { text: "oklch(0.98 0 0)", background: "oklch(0.32 0 0)" },
-    disabled: { text: "oklch(0.72 0 0)", background: "oklch(0.24 0 0)" },
-    shadow: "oklch(0 0 0 / 30%)",
-    border: "oklch(1 0 0 / 10%)",
-    sideMenu: "oklch(0.72 0 0)",
+    editor: {
+      text: "var(--foreground)",
+      background: "var(--background)",
+    },
+    menu: {
+      text: "var(--popover-foreground)",
+      background: "var(--popover)",
+    },
+    tooltip: {
+      text: "var(--popover-foreground)",
+      background: "var(--popover)",
+    },
+    hovered: {
+      text: "var(--foreground)",
+      background: "var(--accent)",
+    },
+    selected: {
+      text: "var(--foreground)",
+      background: "rgba(11, 155, 106, 0.22)",
+    },
+    disabled: {
+      text: "var(--muted-foreground)",
+      background: "var(--muted)",
+    },
+    shadow: "rgba(0, 0, 0, 0.30)",
+    border: "var(--border)",
+    sideMenu: "var(--muted-foreground)",
     highlights: {},
   },
   borderRadius: 8,

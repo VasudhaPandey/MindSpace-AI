@@ -35,7 +35,7 @@ export default async function DashboardPage() {
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
         <div className="absolute -top-40 left-[15%] size-[480px] rounded-full bg-emerald-500/[0.09] blur-[130px]" />
         <div className="absolute right-[-10%] top-[20%] size-[420px] rounded-full bg-teal-400/[0.07] blur-[140px]" />
-        <div className="absolute bottom-[-15%] left-[30%] size-[400px] rounded-full bg-cyan-500/[0.045] blur-[130px]" />
+        <div className="absolute bottom-[-15%] left-[30%] size-[400px] rounded-full bg-emerald-400/[0.045] blur-[130px]" />
       </div>
 
       <div className="relative z-10 space-y-12 px-6 py-8 md:px-8 md:py-10">

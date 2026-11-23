@@ -57,7 +57,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <ClerkProvider
       appearance={{
         theme: dark,
-        variables: { colorPrimary: "oklch(0.74 0.16 55)" },
+        variables: { colorPrimary: "#0B9B6A" },
       }}
     >
       <html

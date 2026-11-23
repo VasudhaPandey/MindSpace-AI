@@ -71,9 +71,9 @@ export function AgentChatPanel({ chat, isReady }: { chat: WorkspaceAgentChat; is
                         <div key={i}>
                           <div className="mb-1 flex items-center gap-1.5">
                             <Wand2
-                              className={`h-3 w-3 shrink-0 text-blue-400/60 ${isStreaming ? "animate-pulse" : ""}`}
+                              className={`h-3 w-3 shrink-0 text-primary/70 ${isStreaming ? "animate-pulse" : ""}`}
                             />
-                            <span className="text-[10px] font-medium uppercase tracking-wider text-blue-400/50">
+                            <span className="text-[10px] font-medium uppercase tracking-wider text-primary/60">
                               {part.text ? "Agent reasoning" : "Thinking..."}
                             </span>
                           </div>
@@ -81,7 +81,7 @@ export function AgentChatPanel({ chat, isReady }: { chat: WorkspaceAgentChat; is
                             <p className="text-[12px] leading-relaxed text-white/35">
                               {part.text}
                               {isStreaming && (
-                                <span className="ml-0.5 inline-block h-3 w-0.5 animate-pulse align-middle bg-blue-400/60" />
+                                <span className="ml-0.5 inline-block h-3 w-0.5 animate-pulse align-middle bg-primary/70" />
                               )}
                             </p>
                           )}
